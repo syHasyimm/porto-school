@@ -4,6 +4,7 @@ import { useState, type PropsWithChildren } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { dashboard, home, login } from '@/routes';
+import { index as teachersIndex } from '@/routes/teachers';
 
 export default function PublicLayout({ children }: PropsWithChildren) {
     const { auth, name } = usePage().props;
@@ -11,6 +12,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
     const nav = [
         { label: 'Beranda', href: home.url() },
         { label: 'Profil', href: `${home.url()}#profil` },
+        { label: 'Guru', href: teachersIndex.url() },
         { label: 'Informasi', href: `${home.url()}#informasi` },
         { label: 'Kontak', href: `${home.url()}#kontak` },
     ];

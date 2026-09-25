@@ -4,6 +4,7 @@ import DashboardLayout, {
     type DashboardNavKey,
 } from '@/layouts/dashboard-layout';
 import { dashboard } from '@/routes/admin';
+import { index as teachersIndex } from '@/routes/admin/teachers';
 
 type AdminLayoutProps = PropsWithChildren<{
     active: DashboardNavKey;
@@ -15,11 +16,15 @@ export default function AdminLayout({
     children,
     title,
 }: AdminLayoutProps) {
+    const navigation = adminNavigation.map((item) =>
+        item.key === 'teachers' ? { ...item, href: teachersIndex.url() } : item,
+    );
+
     return (
         <DashboardLayout
             active={active}
             dashboardHref={dashboard.url()}
-            navigation={adminNavigation}
+            navigation={navigation}
             title={title}
         >
             {children}

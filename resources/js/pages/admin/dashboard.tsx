@@ -73,7 +73,7 @@ export default function AdminDashboard() {
                     </h2>
                     <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
                         Gunakan menu di sidebar untuk membuka modul. Fitur data
-                        guru tersedia pada phase berikutnya.
+                        guru sudah siap untuk dikelola.
                     </p>
                 </section>
             </PageTransition>
