@@ -1,112 +1,125 @@
-import { Form, Head } from '@inertiajs/react';
-import { School } from 'lucide-react';
+import { Form, Head, Link } from '@inertiajs/react';
+import { ArrowLeft, School } from 'lucide-react';
+import { FormField } from '@/components/form-field';
+import { PageTransition } from '@/components/page-transition';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { home } from '@/routes';
 import { store } from '@/routes/login';
 
 export default function Login() {
     return (
-        <>
+        <main className="grid min-h-[100dvh] bg-slate-50 lg:grid-cols-[0.9fr_1.1fr]">
             <Head title="Login" />
+            <section className="hidden bg-slate-950 p-12 text-white lg:flex lg:flex-col lg:justify-between">
+                <Link
+                    href={home()}
+                    className="flex items-center gap-3 font-heading font-bold"
+                >
+                    <span className="grid size-10 place-items-center rounded-xl bg-brand-500">
+                        <School className="size-5" />
+                    </span>
+                    SD Negeri 001 Kepenuhan
+                </Link>
+                <div className="max-w-lg">
+                    <p className="text-sm font-bold text-blue-300">
+                        Portal internal sekolah
+                    </p>
+                    <h1 className="mt-4 font-heading text-4xl leading-tight font-extrabold">
+                        Kelola informasi sekolah dengan lebih teratur.
+                    </h1>
+                    <p className="mt-5 leading-7 text-slate-400">
+                        Akses khusus untuk administrator dan guru SD Negeri 001
+                        Kepenuhan.
+                    </p>
+                </div>
+                <p className="text-xs text-slate-500">
+                    Sistem informasi sekolah
+                </p>
+            </section>
 
-            <main className="grid min-h-screen place-items-center bg-slate-100 px-4 py-10 dark:bg-slate-950">
-                <section className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 dark:border-slate-800 dark:bg-slate-900">
-                    <div className="flex flex-col gap-6">
-                        <div className="flex items-center gap-4">
-                            <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-blue-600 text-white">
-                                <School aria-hidden="true" className="size-6" />
-                            </div>
-                            <div>
-                                <p className="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                                    Portal Sekolah
-                                </p>
-                                <h1 className="text-xl font-bold text-slate-950 dark:text-white">
-                                    SD Negeri 001 Kepenuhan
-                                </h1>
-                            </div>
+            <section className="grid place-items-center px-4 py-10 sm:px-8">
+                <PageTransition>
+                    <div className="w-full max-w-md">
+                        <Link
+                            href={home()}
+                            className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-brand-600 lg:hidden"
+                        >
+                            <ArrowLeft className="size-4" /> Beranda
+                        </Link>
+                        <div className="mb-8 lg:hidden">
+                            <span className="grid size-11 place-items-center rounded-xl bg-brand-500 text-white">
+                                <School className="size-5" />
+                            </span>
                         </div>
+                        <h2 className="font-heading text-3xl font-bold tracking-tight">
+                            Masuk ke dashboard
+                        </h2>
+                        <p className="mt-3 text-sm leading-6 text-slate-600">
+                            Gunakan akun yang diberikan oleh sekolah.
+                        </p>
 
-                        <div className="flex flex-col gap-1">
-                            <h2 className="text-lg font-bold text-slate-950 dark:text-white">
-                                Masuk ke dashboard
-                            </h2>
-                            <p className="text-sm leading-6 text-slate-600 dark:text-slate-400">
-                                Gunakan akun admin atau guru yang telah
-                                diberikan oleh sekolah.
-                            </p>
-                        </div>
-
-                        <Form action={store()} resetOnError={['password']}>
+                        <Form
+                            action={store()}
+                            resetOnError={['password']}
+                            className="mt-8"
+                        >
                             {({ errors, processing }) => (
                                 <div className="flex flex-col gap-5">
-                                    <div className="flex flex-col gap-2">
-                                        <label
-                                            htmlFor="email"
-                                            className="text-sm font-semibold text-slate-700 dark:text-slate-200"
-                                        >
-                                            Email
-                                        </label>
-                                        <input
+                                    <FormField
+                                        htmlFor="email"
+                                        label="Email"
+                                        error={errors.email}
+                                        required
+                                    >
+                                        <Input
                                             id="email"
                                             name="email"
                                             type="email"
                                             autoComplete="email"
                                             autoFocus
                                             required
-                                            className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm transition outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-3 focus:ring-blue-500/15 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
                                             placeholder="nama@sekolah.sch.id"
                                         />
-                                        {errors.email && (
-                                            <p className="text-sm text-red-600 dark:text-red-400">
-                                                {errors.email}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className="flex flex-col gap-2">
-                                        <label
-                                            htmlFor="password"
-                                            className="text-sm font-semibold text-slate-700 dark:text-slate-200"
-                                        >
-                                            Password
-                                        </label>
-                                        <input
+                                    </FormField>
+                                    <FormField
+                                        htmlFor="password"
+                                        label="Password"
+                                        error={errors.password}
+                                        required
+                                    >
+                                        <Input
                                             id="password"
                                             name="password"
                                             type="password"
                                             autoComplete="current-password"
                                             required
-                                            className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm transition outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-3 focus:ring-blue-500/15 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
                                             placeholder="Masukkan password"
                                         />
-                                        {errors.password && (
-                                            <p className="text-sm text-red-600 dark:text-red-400">
-                                                {errors.password}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                                    </FormField>
+                                    <label className="flex items-center gap-2 text-sm text-slate-600">
                                         <input
                                             type="checkbox"
                                             name="remember"
                                             value="1"
-                                            className="size-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-700"
+                                            className="size-4 rounded border-slate-300 text-brand-500 focus:ring-brand-500"
                                         />
                                         Ingat saya
                                     </label>
-
-                                    <button
+                                    <Button
                                         type="submit"
+                                        size="lg"
                                         disabled={processing}
-                                        className="h-11 rounded-lg bg-blue-600 px-4 text-sm font-bold text-white transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+                                        className="w-full"
                                     >
                                         {processing ? 'Memproses...' : 'Masuk'}
-                                    </button>
+                                    </Button>
                                 </div>
                             )}
                         </Form>
                     </div>
-                </section>
-            </main>
-        </>
+                </PageTransition>
+            </section>
+        </main>
     );
 }

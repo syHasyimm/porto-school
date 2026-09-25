@@ -1,0 +1,136 @@
+import { Link, usePage } from '@inertiajs/react';
+import { Menu, School, X } from 'lucide-react';
+import { useState, type PropsWithChildren } from 'react';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { dashboard, home, login } from '@/routes';
+
+export default function PublicLayout({ children }: PropsWithChildren) {
+    const { auth, name } = usePage().props;
+    const [open, setOpen] = useState(false);
+    const nav = [
+        { label: 'Beranda', href: home.url() },
+        { label: 'Profil', href: `${home.url()}#profil` },
+        { label: 'Informasi', href: `${home.url()}#informasi` },
+        { label: 'Kontak', href: `${home.url()}#kontak` },
+    ];
+
+    return (
+        <div className="min-h-[100dvh] bg-white text-slate-950">
+            <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+                <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                    <Link
+                        href={home()}
+                        className="flex min-w-0 items-center gap-3"
+                    >
+                        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-500 text-white">
+                            <School
+                                aria-hidden="true"
+                                className="size-5"
+                                strokeWidth={1.8}
+                            />
+                        </span>
+                        <span className="min-w-0">
+                            <span className="block truncate font-heading text-sm font-bold sm:text-base">
+                                {name}
+                            </span>
+                            <span className="block text-[11px] font-semibold text-slate-500">
+                                Sekolah dasar negeri
+                            </span>
+                        </span>
+                    </Link>
+
+                    <nav
+                        className="hidden items-center gap-7 md:flex"
+                        aria-label="Navigasi utama"
+                    >
+                        {nav.map((item) => (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className="text-sm font-semibold text-slate-600 transition hover:text-brand-600"
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
+                        <Link
+                            href={auth.user ? dashboard() : login()}
+                            className={buttonVariants({ size: 'sm' })}
+                        >
+                            {auth.user ? 'Dashboard' : 'Masuk'}
+                        </Link>
+                    </nav>
+
+                    <button
+                        type="button"
+                        className="grid size-10 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 md:hidden"
+                        aria-label="Buka menu"
+                        onClick={() => setOpen((value) => !value)}
+                    >
+                        {open ? (
+                            <X className="size-5" />
+                        ) : (
+                            <Menu className="size-5" />
+                        )}
+                    </button>
+                </div>
+                {open && (
+                    <nav
+                        className="border-t border-slate-200 bg-white px-4 py-4 md:hidden"
+                        aria-label="Navigasi seluler"
+                    >
+                        <div className="mx-auto flex max-w-7xl flex-col gap-1">
+                            {nav.map((item) => (
+                                <Link
+                                    key={item.label}
+                                    href={item.href}
+                                    onClick={() => setOpen(false)}
+                                    className="rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                            <Link
+                                href={auth.user ? dashboard() : login()}
+                                className={cn(buttonVariants(), 'mt-3')}
+                            >
+                                {auth.user ? 'Dashboard' : 'Masuk'}
+                            </Link>
+                        </div>
+                    </nav>
+                )}
+            </header>
+
+            {children}
+
+            <footer
+                id="kontak"
+                className="border-t border-slate-200 bg-slate-950 text-slate-300"
+            >
+                <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-2 lg:px-8">
+                    <div>
+                        <p className="font-heading text-lg font-bold text-white">
+                            {name}
+                        </p>
+                        <p className="mt-3 max-w-md text-sm leading-6 text-slate-400">
+                            Pusat informasi resmi sekolah untuk peserta didik,
+                            orang tua, guru, dan masyarakat.
+                        </p>
+                    </div>
+                    <div className="md:text-right">
+                        <p className="text-sm font-bold text-white">
+                            Kepenuhan, Rokan Hulu
+                        </p>
+                        <p className="mt-2 text-sm text-slate-400">
+                            Informasi kontak lengkap akan ditampilkan melalui
+                            pengaturan sekolah.
+                        </p>
+                    </div>
+                </div>
+                <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-slate-500">
+                    © {new Date().getFullYear()} {name}
+                </div>
+            </footer>
+        </div>
+    );
+}

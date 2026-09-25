@@ -1,23 +1,31 @@
 import { Head } from '@inertiajs/react';
-import AuthenticatedLayout from '@/layouts/authenticated-layout';
+import { UserRound } from 'lucide-react';
+import { PageHeader } from '@/components/page-header';
+import { PageTransition } from '@/components/page-transition';
+import GuruLayout from '@/layouts/guru-layout';
 
 export default function GuruDashboard() {
     return (
-        <AuthenticatedLayout title="Dashboard Guru">
+        <GuruLayout active="dashboard" title="Dashboard Guru">
             <Head title="Dashboard Guru" />
-
-            <section className="max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 dark:border-slate-800 dark:bg-slate-900">
-                <p className="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                    Profil guru
-                </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight">
-                    Selamat datang di portal guru
-                </h2>
-                <p className="mt-3 leading-7 text-slate-600 dark:text-slate-400">
-                    Akun Anda sudah terlindungi oleh akses khusus guru. Formulir
-                    pengelolaan profil akan ditambahkan pada phase fitur guru.
-                </p>
-            </section>
-        </AuthenticatedLayout>
+            <PageTransition>
+                <PageHeader
+                    title="Dashboard"
+                    description="Kelola informasi profil Anda sebagai guru SD Negeri 001 Kepenuhan."
+                />
+                <section className="max-w-2xl rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
+                    <span className="grid size-11 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                        <UserRound aria-hidden="true" className="size-5" />
+                    </span>
+                    <h2 className="mt-6 font-heading text-2xl font-bold">
+                        Profil guru dalam satu halaman
+                    </h2>
+                    <p className="mt-3 text-sm leading-6 text-slate-600">
+                        Lengkapi NIP, mata pelajaran, alamat, nomor telepon, dan
+                        foto profil agar informasi publik sekolah tetap akurat.
+                    </p>
+                </section>
+            </PageTransition>
+        </GuruLayout>
     );
 }
