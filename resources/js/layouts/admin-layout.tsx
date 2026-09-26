@@ -4,6 +4,7 @@ import DashboardLayout, {
     type DashboardNavKey,
 } from '@/layouts/dashboard-layout';
 import { dashboard } from '@/routes/admin';
+import { index as calendarIndex } from '@/routes/admin/calendar';
 import { index as teachersIndex } from '@/routes/admin/teachers';
 
 type AdminLayoutProps = PropsWithChildren<{
@@ -16,9 +17,17 @@ export default function AdminLayout({
     children,
     title,
 }: AdminLayoutProps) {
-    const navigation = adminNavigation.map((item) =>
-        item.key === 'teachers' ? { ...item, href: teachersIndex.url() } : item,
-    );
+    const navigation = adminNavigation.map((item) => {
+        if (item.key === 'teachers') {
+            return { ...item, href: teachersIndex.url() };
+        }
+
+        if (item.key === 'calendar') {
+            return { ...item, href: calendarIndex.url() };
+        }
+
+        return item;
+    });
 
     return (
         <DashboardLayout
