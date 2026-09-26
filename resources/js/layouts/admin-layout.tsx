@@ -6,6 +6,7 @@ import DashboardLayout, {
 import { dashboard } from '@/routes/admin';
 import { index as calendarIndex } from '@/routes/admin/calendar';
 import { index as complaintsIndex } from '@/routes/admin/complaints';
+import { index as galleryIndex } from '@/routes/admin/gallery';
 import { index as newsIndex } from '@/routes/admin/news';
 import { index as teachersIndex } from '@/routes/admin/teachers';
 
@@ -34,6 +35,10 @@ export default function AdminLayout({
 
         if (item.key === 'news') {
             return { ...item, href: newsIndex.url() };
+        }
+
+        if (item.key === 'gallery') {
+            return { ...item, href: galleryIndex.url() };
         }
 
         return item;

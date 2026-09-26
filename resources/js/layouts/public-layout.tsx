@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { dashboard, home, login } from '@/routes';
 import { index as calendarIndex } from '@/routes/calendar';
 import { create as complaintCreate } from '@/routes/complaints';
+import { index as galleryIndex } from '@/routes/gallery';
 import { index as newsIndex } from '@/routes/news';
 import { index as teachersIndex } from '@/routes/teachers';
 
@@ -19,6 +20,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
         { label: 'Kalender', href: calendarIndex.url() },
         { label: 'Pengaduan', href: complaintCreate.url() },
         { label: 'Berita', href: newsIndex.url() },
+        { label: 'Galeri', href: galleryIndex.url() },
         { label: 'Kontak', href: `${home.url()}#kontak` },
     ];
 
