@@ -5,6 +5,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { dashboard, home, login } from '@/routes';
 import { index as calendarIndex } from '@/routes/calendar';
+import { create as complaintCreate } from '@/routes/complaints';
 import { index as teachersIndex } from '@/routes/teachers';
 
 export default function PublicLayout({ children }: PropsWithChildren) {
@@ -15,6 +16,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
         { label: 'Profil', href: `${home.url()}#profil` },
         { label: 'Guru', href: teachersIndex.url() },
         { label: 'Kalender', href: calendarIndex.url() },
+        { label: 'Pengaduan', href: complaintCreate.url() },
         { label: 'Informasi', href: `${home.url()}#informasi` },
         { label: 'Kontak', href: `${home.url()}#kontak` },
     ];
@@ -45,7 +47,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                     </Link>
 
                     <nav
-                        className="hidden items-center gap-7 md:flex"
+                        className="hidden items-center gap-6 lg:flex"
                         aria-label="Navigasi utama"
                     >
                         {nav.map((item) => (
@@ -67,7 +69,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
 
                     <button
                         type="button"
-                        className="grid size-10 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 md:hidden"
+                        className="grid size-10 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 lg:hidden"
                         aria-label="Buka menu"
                         onClick={() => setOpen((value) => !value)}
                     >
@@ -80,7 +82,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                 </div>
                 {open && (
                     <nav
-                        className="border-t border-slate-200 bg-white px-4 py-4 md:hidden"
+                        className="border-t border-slate-200 bg-white px-4 py-4 lg:hidden"
                         aria-label="Navigasi seluler"
                     >
                         <div className="mx-auto flex max-w-7xl flex-col gap-1">

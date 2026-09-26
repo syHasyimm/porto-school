@@ -9,7 +9,23 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $reference_number
+ * @property string $reporter_name
+ * @property string $email
+ * @property string $phone
+ * @property string $student_name
+ * @property string $student_class
+ * @property ComplaintCategory $category
+ * @property string $body
+ * @property string|null $attachment_path
+ * @property ComplaintStatus $status
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 #[Fillable(['reference_number', 'reporter_name', 'email', 'phone', 'student_name', 'student_class', 'category', 'body', 'attachment_path', 'status'])]
 class Complaint extends Model
 {

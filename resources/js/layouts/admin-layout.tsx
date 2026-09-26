@@ -5,6 +5,7 @@ import DashboardLayout, {
 } from '@/layouts/dashboard-layout';
 import { dashboard } from '@/routes/admin';
 import { index as calendarIndex } from '@/routes/admin/calendar';
+import { index as complaintsIndex } from '@/routes/admin/complaints';
 import { index as teachersIndex } from '@/routes/admin/teachers';
 
 type AdminLayoutProps = PropsWithChildren<{
@@ -24,6 +25,10 @@ export default function AdminLayout({
 
         if (item.key === 'calendar') {
             return { ...item, href: calendarIndex.url() };
+        }
+
+        if (item.key === 'complaints') {
+            return { ...item, href: complaintsIndex.url() };
         }
 
         return item;

@@ -72,8 +72,9 @@ export default function AdminDashboard() {
                         Selamat datang di ruang kerja admin
                     </h2>
                     <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-                        Gunakan menu di sidebar untuk membuka modul. Fitur data
-                        guru sudah siap untuk dikelola.
+                        Gunakan menu di sidebar untuk mengelola data guru,
+                        kalender akademik, dan tindak lanjut pengaduan orang
+                        tua.
                     </p>
                 </section>
             </PageTransition>
