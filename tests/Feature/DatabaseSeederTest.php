@@ -48,5 +48,5 @@ it('can run the seed data repeatedly without duplicates', function () {
     $this->assertDatabaseCount('complaint_responses', 1);
     $this->assertDatabaseCount('news', 2);
     $this->assertDatabaseCount('galleries', 2);
-    $this->assertDatabaseCount('site_settings', 8);
+    $this->assertDatabaseCount('site_settings', 16);
 });

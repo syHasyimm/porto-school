@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { ArrowRight, Newspaper } from 'lucide-react';
 import { EmptyState } from '@/components/empty-state';
+import { MediaImage } from '@/components/media-image';
 import { PageTransition } from '@/components/page-transition';
 import { Pagination } from '@/components/pagination';
 import PublicLayout from '@/layouts/public-layout';
@@ -50,19 +51,11 @@ export default function PublicNewsIndex({ articles }: PublicNewsIndexProps) {
                                             href={show(article.slug)}
                                             className="group block"
                                         >
-                                            <div className="grid aspect-[16/10] place-items-center overflow-hidden rounded-xl bg-slate-100">
-                                                {article.thumbnail_url ? (
-                                                    <img
-                                                        src={
-                                                            article.thumbnail_url
-                                                        }
-                                                        alt={`Thumbnail ${article.title}`}
-                                                        className="size-full object-cover transition duration-300 group-hover:scale-[1.03]"
-                                                    />
-                                                ) : (
-                                                    <Newspaper className="size-9 text-slate-400" />
-                                                )}
-                                            </div>
+                                            <MediaImage
+                                                src={article.thumbnail_url}
+                                                alt={`Thumbnail ${article.title}`}
+                                                className="aspect-[16/10] w-full rounded-xl object-cover transition duration-300 group-hover:scale-[1.03]"
+                                            />
                                             <time className="mt-5 block text-xs font-bold text-brand-600">
                                                 {article.published_at
                                                     ? dateFormatter.format(

@@ -5,11 +5,13 @@ use App\Http\Controllers\Admin\ComplaintController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\NewsController;
+use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
 use App\Http\Controllers\Guru\ProfileController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicCalendarController;
 use App\Http\Controllers\PublicComplaintController;
 use App\Http\Controllers\PublicGalleryController;
@@ -17,7 +19,7 @@ use App\Http\Controllers\PublicNewsController;
 use App\Http\Controllers\PublicTeacherController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', HomeController::class)->name('home');
 Route::get('/guru', PublicTeacherController::class)->name('teachers.index');
 Route::get('/kalender-akademik', PublicCalendarController::class)->name('calendar.index');
 Route::get('/pengaduan', [PublicComplaintController::class, 'create'])->name('complaints.create');
@@ -58,6 +60,8 @@ Route::middleware('auth')->group(function (): void {
             ->parameters(['galeri' => 'gallery'])
             ->except('show')
             ->names('gallery');
+        Route::get('/pengaturan', [SiteSettingController::class, 'edit'])->name('settings.edit');
+        Route::put('/pengaturan', [SiteSettingController::class, 'update'])->name('settings.update');
     });
 
     Route::prefix('guru')->name('guru.')->middleware('guru')->group(function (): void {

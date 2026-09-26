@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { GalleryHorizontalEnd, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { EmptyState } from '@/components/empty-state';
+import { MediaImage } from '@/components/media-image';
 import { PageTransition } from '@/components/page-transition';
 import { Pagination } from '@/components/pagination';
 import { buttonVariants } from '@/components/ui/button';
@@ -104,7 +105,7 @@ export default function PublicGallery({
                                         onClick={() => setSelected(item)}
                                         className="group relative mb-5 block w-full break-inside-avoid overflow-hidden rounded-xl bg-slate-100 text-left"
                                     >
-                                        <img
+                                        <MediaImage
                                             src={item.image_url}
                                             alt={item.title}
                                             className={`w-full object-cover transition duration-300 group-hover:scale-[1.02] ${itemIndex % 3 === 1 ? 'aspect-[4/5]' : 'aspect-[4/3]'}`}
@@ -149,7 +150,7 @@ export default function PublicGallery({
                         onClick={() => setSelected(null)}
                     />
                     <figure className="relative z-10 max-h-full max-w-6xl">
-                        <img
+                        <MediaImage
                             src={selected.image_url}
                             alt={selected.title}
                             className="max-h-[82vh] max-w-full rounded-xl object-contain shadow-2xl"

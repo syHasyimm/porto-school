@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, CalendarDays, Newspaper } from 'lucide-react';
+import { ArrowLeft, CalendarDays } from 'lucide-react';
 import { PageTransition } from '@/components/page-transition';
+import { MediaImage } from '@/components/media-image';
 import { buttonVariants } from '@/components/ui/button';
 import PublicLayout from '@/layouts/public-layout';
 import { index } from '@/routes/news';
@@ -38,17 +39,11 @@ export default function PublicNewsShow({ article }: PublicNewsShowProps) {
                                 {article.title}
                             </h1>
                         </div>
-                        <div className="mt-10 grid aspect-[16/8] place-items-center overflow-hidden rounded-2xl bg-slate-100">
-                            {article.thumbnail_url ? (
-                                <img
-                                    src={article.thumbnail_url}
-                                    alt={`Thumbnail ${article.title}`}
-                                    className="size-full object-cover"
-                                />
-                            ) : (
-                                <Newspaper className="size-14 text-slate-400" />
-                            )}
-                        </div>
+                        <MediaImage
+                            src={article.thumbnail_url}
+                            alt={`Thumbnail ${article.title}`}
+                            className="mt-10 aspect-[16/8] w-full rounded-2xl object-cover"
+                        />
                         <div className="mx-auto mt-10 max-w-3xl text-base leading-8 whitespace-pre-line text-slate-700">
                             {article.content}
                         </div>

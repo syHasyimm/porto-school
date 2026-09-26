@@ -1,5 +1,13 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Menu, School, X } from 'lucide-react';
+import {
+    ExternalLink,
+    Mail,
+    MapPin,
+    Menu,
+    Phone,
+    School,
+    X,
+} from 'lucide-react';
 import { useState, type PropsWithChildren } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -11,7 +19,7 @@ import { index as newsIndex } from '@/routes/news';
 import { index as teachersIndex } from '@/routes/teachers';
 
 export default function PublicLayout({ children }: PropsWithChildren) {
-    const { auth, name } = usePage().props;
+    const { auth, name, site } = usePage().props;
     const [open, setOpen] = useState(false);
     const nav = [
         { label: 'Beranda', href: home.url() },
@@ -32,12 +40,20 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                         href={home()}
                         className="flex min-w-0 items-center gap-3"
                     >
-                        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-500 text-white">
-                            <School
-                                aria-hidden="true"
-                                className="size-5"
-                                strokeWidth={1.8}
-                            />
+                        <span className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-xl bg-brand-500 text-white">
+                            {site.logo_url ? (
+                                <img
+                                    src={site.logo_url}
+                                    alt=""
+                                    className="size-full bg-white object-contain p-1"
+                                />
+                            ) : (
+                                <School
+                                    aria-hidden="true"
+                                    className="size-5"
+                                    strokeWidth={1.8}
+                                />
+                            )}
                         </span>
                         <span className="min-w-0">
                             <span className="block truncate font-heading text-sm font-bold sm:text-base">
@@ -116,24 +132,69 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                 id="kontak"
                 className="border-t border-slate-200 bg-slate-950 text-slate-300"
             >
-                <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-2 lg:px-8">
+                <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.1fr_1fr_1fr] lg:px-8">
                     <div>
                         <p className="font-heading text-lg font-bold text-white">
                             {name}
                         </p>
                         <p className="mt-3 max-w-md text-sm leading-6 text-slate-400">
-                            Pusat informasi resmi sekolah untuk peserta didik,
-                            orang tua, guru, dan masyarakat.
+                            {site.school_description ??
+                                'Pusat informasi resmi sekolah untuk peserta didik, orang tua, guru, dan masyarakat.'}
                         </p>
                     </div>
-                    <div className="md:text-right">
+                    <div>
+                        <p className="text-sm font-bold text-white">Kontak</p>
+                        <div className="mt-3 space-y-2 text-sm text-slate-400">
+                            {site.school_address && (
+                                <p className="flex gap-2">
+                                    <MapPin className="mt-0.5 size-4 shrink-0" />
+                                    <span>{site.school_address}</span>
+                                </p>
+                            )}
+                            {site.school_phone && (
+                                <p className="flex gap-2">
+                                    <Phone className="mt-0.5 size-4 shrink-0" />
+                                    <span>{site.school_phone}</span>
+                                </p>
+                            )}
+                            {site.school_email && (
+                                <p className="flex gap-2">
+                                    <Mail className="mt-0.5 size-4 shrink-0" />
+                                    <span className="break-all">
+                                        {site.school_email}
+                                    </span>
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                    <div>
                         <p className="text-sm font-bold text-white">
-                            Kepenuhan, Rokan Hulu
+                            Ikuti sekolah
                         </p>
-                        <p className="mt-2 text-sm text-slate-400">
-                            Informasi kontak lengkap akan ditampilkan melalui
-                            pengaturan sekolah.
-                        </p>
+                        <div className="mt-3 flex gap-2">
+                            {site.facebook_url && (
+                                <a
+                                    href={site.facebook_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label="Facebook sekolah"
+                                    className="grid size-10 place-items-center rounded-lg border border-white/15 hover:bg-white/10"
+                                >
+                                    <ExternalLink className="size-4" />
+                                </a>
+                            )}
+                            {site.instagram_url && (
+                                <a
+                                    href={site.instagram_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label="Instagram sekolah"
+                                    className="grid size-10 place-items-center rounded-lg border border-white/15 hover:bg-white/10"
+                                >
+                                    <ExternalLink className="size-4" />
+                                </a>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-slate-500">
