@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AcademicEventController;
 use App\Http\Controllers\Admin\ComplaintController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardRedirectController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
 use App\Http\Controllers\Guru\ProfileController;
 use App\Http\Controllers\PublicCalendarController;
 use App\Http\Controllers\PublicComplaintController;
+use App\Http\Controllers\PublicNewsController;
 use App\Http\Controllers\PublicTeacherController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,8 @@ Route::get('/kalender-akademik', PublicCalendarController::class)->name('calenda
 Route::get('/pengaduan', [PublicComplaintController::class, 'create'])->name('complaints.create');
 Route::post('/pengaduan', [PublicComplaintController::class, 'store'])->name('complaints.store');
 Route::get('/pengaduan/berhasil', [PublicComplaintController::class, 'success'])->name('complaints.success');
+Route::get('/berita', [PublicNewsController::class, 'index'])->name('news.index');
+Route::get('/berita/{news:slug}', [PublicNewsController::class, 'show'])->name('news.show');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -44,6 +48,9 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/pengaduan/{complaint}/tanggapan', [ComplaintController::class, 'storeResponse'])->name('complaints.responses.store');
         Route::get('/pengaduan/{complaint}/lampiran', [ComplaintController::class, 'downloadAttachment'])->name('complaints.attachment');
         Route::delete('/pengaduan/{complaint}', [ComplaintController::class, 'destroy'])->name('complaints.destroy');
+        Route::resource('berita', NewsController::class)
+            ->parameters(['berita' => 'news'])
+            ->names('news');
     });
 
     Route::prefix('guru')->name('guru.')->middleware('guru')->group(function (): void {
