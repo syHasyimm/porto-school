@@ -8,6 +8,8 @@ use App\Http\Requests\Admin\StoreAcademicEventRequest;
 use App\Http\Requests\Admin\UpdateAcademicEventRequest;
 use App\Models\AcademicEvent;
 use App\Models\User;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,19 +24,29 @@ class AcademicEventController extends Controller
         Gate::authorize('viewAny', AcademicEvent::class);
         $search = $request->string('search')->trim()->toString();
         $category = $this->validCategory($request->string('category')->toString());
+        $month = $this->month($request->query('month'));
+        $calendarStart = $month->startOfWeek(CarbonInterface::MONDAY);
+        $calendarEnd = $month->endOfMonth()->endOfWeek(CarbonInterface::SUNDAY);
 
         $events = AcademicEvent::query()
+            ->whereDate('start_date', '<=', $calendarEnd)
+            ->where(function (Builder $query) use ($calendarStart): void {
+                $query->whereDate('start_date', '>=', $calendarStart)
+                    ->orWhereDate('end_date', '>=', $calendarStart);
+            })
             ->when($search !== '', fn (Builder $query) => $query->where('title', 'like', "%{$search}%"))
             ->when($category !== '', fn (Builder $query) => $query->where('category', $category))
-            ->orderByDesc('start_date')
-            ->paginate(12)
-            ->withQueryString()
-            ->through(fn (AcademicEvent $event): array => $this->eventData($event));
+            ->orderBy('start_date')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (AcademicEvent $event): array => $this->eventData($event));
 
         return Inertia::render('admin/calendar/index', [
             'categories' => $this->categories(),
             'events' => $events,
             'filters' => ['search' => $search, 'category' => $category],
+            'month' => $month->format('Y-m'),
+            'today' => CarbonImmutable::today()->format('Y-m-d'),
         ]);
     }
 
@@ -52,16 +64,18 @@ class AcademicEventController extends Controller
 
         AcademicEvent::query()->create([...$request->validated(), 'created_by' => $user->id]);
 
-        return to_route('admin.calendar.index')->with('success', 'Agenda akademik berhasil ditambahkan.');
+        return to_route('admin.calendar.index', $this->calendarParameters($request))
+            ->with('success', 'Agenda akademik berhasil ditambahkan.');
     }
 
-    public function edit(AcademicEvent $academicEvent): Response
+    public function edit(Request $request, AcademicEvent $academicEvent): Response
     {
         Gate::authorize('update', $academicEvent);
 
         return Inertia::render('admin/calendar/edit', [
             'categories' => $this->categories(),
             'event' => $this->eventData($academicEvent),
+            'calendarContext' => $this->calendarParameters($request),
         ]);
     }
 
@@ -70,15 +84,48 @@ class AcademicEventController extends Controller
         Gate::authorize('update', $academicEvent);
         $academicEvent->update($request->validated());
 
-        return to_route('admin.calendar.index')->with('success', 'Agenda akademik berhasil diperbarui.');
+        return to_route('admin.calendar.index', $this->calendarParameters($request))
+            ->with('success', 'Agenda akademik berhasil diperbarui.');
     }
 
-    public function destroy(AcademicEvent $academicEvent): RedirectResponse
+    public function destroy(Request $request, AcademicEvent $academicEvent): RedirectResponse
     {
         Gate::authorize('delete', $academicEvent);
         $academicEvent->delete();
 
-        return to_route('admin.calendar.index')->with('success', 'Agenda akademik berhasil dihapus.');
+        return to_route('admin.calendar.index', $this->calendarParameters($request))
+            ->with('success', 'Agenda akademik berhasil dihapus.');
+    }
+
+    private function month(mixed $value): CarbonImmutable
+    {
+        if (! is_string($value) || ! preg_match('/^[1-9][0-9]{3}-(0[1-9]|1[0-2])$/D', $value)) {
+            return CarbonImmutable::today()->startOfMonth();
+        }
+
+        return CarbonImmutable::createFromFormat('!Y-m', $value)->startOfMonth();
+    }
+
+    /** @return array{month?: string, search?: string, category?: string} */
+    private function calendarParameters(Request $request): array
+    {
+        $parameters = [];
+
+        if ($request->query('month') !== null) {
+            $parameters['month'] = $this->month($request->query('month'))->format('Y-m');
+        }
+
+        $search = $request->query('search');
+        if (is_string($search) && trim($search) !== '') {
+            $parameters['search'] = trim($search);
+        }
+
+        $category = $request->query('category');
+        if (is_string($category) && $this->validCategory($category) !== '') {
+            $parameters['category'] = $category;
+        }
+
+        return $parameters;
     }
 
     /** @return array<int, array{label: string, value: string}> */
@@ -107,6 +154,8 @@ class AcademicEventController extends Controller
             'start_date' => $event->start_date->format('Y-m-d'),
             'end_date' => $event->end_date?->format('Y-m-d'),
             'color' => $event->color,
+            'whatsapp_reminder_enabled' => $event->whatsapp_reminder_enabled,
+            'is_cancelled' => $event->is_cancelled,
         ];
     }
 }

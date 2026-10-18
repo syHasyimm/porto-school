@@ -1,6 +1,8 @@
 export type NewsSummary = {
     id: number;
     title: string;
+    category?: string;
+    category_label?: string;
     slug: string;
     excerpt: string;
     thumbnail_url: string | null;
@@ -11,4 +13,5 @@ export type NewsSummary = {
 
 export type NewsArticle = NewsSummary & {
     content: string;
+    content_html: string | null;
 };

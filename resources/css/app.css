@@ -54,6 +54,42 @@
     }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes public-page-shell-enter {
+        from {
+            opacity: 0.94;
+            transform: translateY(6px);
+        }
+    }
+
+    .public-page-shell {
+        animation: public-page-shell-enter 360ms cubic-bezier(0.16, 1, 0.3, 1)
+            both;
+    }
+
+    @keyframes public-page-exit {
+        to {
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+    }
+
+    @keyframes public-page-enter {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+    }
+
+    ::view-transition-old(root) {
+        animation: 170ms ease-in both public-page-exit;
+    }
+
+    ::view-transition-new(root) {
+        animation: 320ms cubic-bezier(0.16, 1, 0.3, 1) both public-page-enter;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -62,5 +98,69 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+@layer components {
+    .news-quill .ql-toolbar.ql-snow {
+        border: 0;
+        border-bottom: 1px solid var(--color-slate-200);
+        padding: 0.75rem;
+    }
+
+    .news-quill .ql-container.ql-snow {
+        border: 0;
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+    }
+
+    .news-quill .ql-editor {
+        min-height: 18rem;
+        padding: 1rem;
+        line-height: 1.75;
+    }
+
+    .news-body > * + * {
+        margin-top: 1rem;
+    }
+
+    .news-body h2,
+    .news-body h3 {
+        color: var(--color-slate-950);
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    .news-body h2 {
+        font-size: 1.5em;
+    }
+
+    .news-body h3 {
+        font-size: 1.2em;
+    }
+
+    .news-body ul,
+    .news-body ol {
+        padding-left: 1.5rem;
+    }
+
+    .news-body ul {
+        list-style: disc;
+    }
+
+    .news-body ol {
+        list-style: decimal;
+    }
+
+    .news-body blockquote {
+        border-left: 3px solid var(--color-brand-500);
+        padding-left: 1rem;
+        color: var(--color-slate-600);
+    }
+
+    .news-body a {
+        color: var(--color-brand-700);
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
     }
 }

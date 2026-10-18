@@ -10,6 +10,15 @@ export type SiteSettings = {
     school_facilities: string | null;
     school_extracurriculars: string | null;
     headmaster_name: string | null;
+    headmaster_message: string | null;
+    headmaster_photo_url: string | null;
+    hero_image_url: string | null;
+    profile_image_url: string | null;
+    registration_url: string | null;
+    alumni_count: string | null;
+    active_students_count: string | null;
+    teacher_staff_count: string | null;
+    accreditation: string | null;
     npsn: string | null;
     facebook_url: string | null;
     instagram_url: string | null;

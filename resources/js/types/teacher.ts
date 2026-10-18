@@ -1,3 +1,10 @@
+export type TeacherEducation = {
+    level: string;
+    institution: string;
+    field_of_study: string | null;
+    graduation_year: number | null;
+};
+
 export type Teacher = {
     id: number;
     name: string;
@@ -9,11 +16,12 @@ export type Teacher = {
     subject: string | null;
     bio: string | null;
     photo_url: string | null;
+    education_history: TeacherEducation[];
 };
 
 export type PublicTeacher = Pick<
     Teacher,
-    'id' | 'name' | 'subject' | 'bio' | 'photo_url'
+    'id' | 'name' | 'subject' | 'bio' | 'photo_url' | 'education_history'
 >;
 
 export type PaginationLink = {

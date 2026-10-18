@@ -19,10 +19,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $birth_date
  * @property string|null $subject
  * @property string|null $bio
+ * @property list<array{level: string, institution: string, field_of_study: string|null, graduation_year: int|null}>|null $education_history
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['user_id', 'nip', 'photo_path', 'phone', 'address', 'birth_date', 'subject', 'bio'])]
+#[Fillable(['user_id', 'nip', 'photo_path', 'phone', 'address', 'birth_date', 'subject', 'bio', 'education_history'])]
 class TeacherProfile extends Model
 {
     /** @use HasFactory<TeacherProfileFactory> */
@@ -35,6 +36,7 @@ class TeacherProfile extends Model
     {
         return [
             'birth_date' => 'date',
+            'education_history' => 'array',
         ];
     }
 

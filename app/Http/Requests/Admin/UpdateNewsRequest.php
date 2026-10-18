@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\NewsCategory;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 
 class UpdateNewsRequest extends FormRequest
@@ -28,7 +30,9 @@ class UpdateNewsRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
+            'category' => ['required', Rule::enum(NewsCategory::class)],
             'content' => ['required', 'string', 'max:50000'],
+            'content_html' => ['nullable', 'string', 'max:100000'],
             'thumbnail' => ['nullable', File::image()->max(5 * 1024)],
             'published_at' => ['nullable', 'date'],
         ];

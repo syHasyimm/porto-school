@@ -4,4 +4,7 @@ export type * from './complaint';
 export type * from './gallery';
 export type * from './news';
 export type * from './site';
+export type * from './school-history';
 export type * from './teacher';
+export type * from './testimonial';
+export type * from './testimonial';

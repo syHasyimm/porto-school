@@ -39,7 +39,9 @@ it('creates news with a generated unique slug and thumbnail', function () {
 
     $payload = [
         'title' => 'Festival Literasi Sekolah',
+        'category' => 'kegiatan',
         'content' => 'Siswa mengikuti rangkaian kegiatan literasi sekolah.',
+        'content_html' => '<p>Siswa <strong>mengikuti</strong> rangkaian kegiatan literasi sekolah.</p>',
         'published_at' => '2026-10-12 08:00:00',
     ];
 
@@ -58,6 +60,8 @@ it('creates news with a generated unique slug and thumbnail', function () {
 
     expect($articles[0]->slug)->toBe('festival-literasi-sekolah')
         ->and($articles[1]->slug)->toBe('festival-literasi-sekolah-2')
+        ->and($articles[0]->category)->toBe('kegiatan')
+        ->and($articles[0]->content_html)->toBe($payload['content_html'])
         ->and($articles[0]->created_by)->toBe($admin->id)
         ->and($articles[0]->thumbnail_path)->not->toBeNull();
 
@@ -71,6 +75,7 @@ it('validates news fields and thumbnail type', function () {
     $this->actingAs($admin)
         ->post(route('admin.news.store'), [
             'title' => '',
+            'category' => 'tidak-valid',
             'content' => '',
             'published_at' => 'bukan-tanggal',
             'thumbnail' => UploadedFile::fake()->create(
@@ -79,7 +84,20 @@ it('validates news fields and thumbnail type', function () {
                 'application/pdf',
             ),
         ])
-        ->assertInvalid(['title', 'content', 'published_at', 'thumbnail']);
+        ->assertInvalid(['title', 'category', 'content', 'published_at', 'thumbnail']);
+});
+
+it('requires a category when creating news', function () {
+    $admin = User::factory()->admin()->create();
+
+    $this->actingAs($admin)
+        ->post(route('admin.news.store'), [
+            'title' => 'Berita tanpa kategori',
+            'content' => 'Isi berita sekolah.',
+        ])
+        ->assertInvalid(['category']);
+
+    $this->assertDatabaseCount('news', 0);
 });
 
 it('updates news and replaces its thumbnail while preserving the public slug', function () {
@@ -93,9 +111,11 @@ it('updates news and replaces its thumbnail while preserving the public slug', f
     ]);
 
     $this->actingAs($admin)
-        ->put(route('admin.news.update', $article), [
+        ->post(route('admin.news.update', $article).'?_method=PUT', [
             'title' => 'Judul Baru',
+            'category' => 'prestasi',
             'content' => 'Konten berita yang telah diperbarui.',
+            'content_html' => '<p>Konten berita yang telah <em>diperbarui</em>.</p>',
             'published_at' => null,
             'thumbnail' => UploadedFile::fake()->image('new.jpg', 1200, 800),
         ])
@@ -104,12 +124,45 @@ it('updates news and replaces its thumbnail while preserving the public slug', f
     $article->refresh();
 
     expect($article->title)->toBe('Judul Baru')
+        ->and($article->category)->toBe('prestasi')
+        ->and($article->content_html)->toBe('<p>Konten berita yang telah <em>diperbarui</em>.</p>')
         ->and($article->slug)->toBe('judul-lama')
         ->and($article->published_at)->toBeNull()
         ->and($article->thumbnail_path)->not->toBe('news/old.jpg');
 
     Storage::disk('public')->assertMissing('news/old.jpg');
     Storage::disk('public')->assertExists($article->thumbnail_path);
+});
+
+it('removes unsafe markup before saving rich news content', function () {
+    $admin = User::factory()->admin()->create();
+
+    $this->actingAs($admin)
+        ->post(route('admin.news.store'), [
+            'title' => 'Berita dengan tautan',
+            'category' => 'pengumuman',
+            'content' => 'Baca pengumuman sekolah.',
+            'content_html' => '<p onclick="alert(1)">Baca <a href="javascript:alert(1)">pengumuman</a> <a href="https://sekolah.test" target="_blank">sekolah</a>.</p><script>alert(1)</script>',
+        ])
+        ->assertRedirectToRoute('admin.news.index');
+
+    expect(News::query()->firstOrFail()->content_html)
+        ->toBe('<p>Baca <a>pengumuman</a> <a href="https://sekolah.test">sekolah</a>.</p>');
+});
+
+it('rejects rich news content without readable text', function () {
+    $admin = User::factory()->admin()->create();
+
+    $this->actingAs($admin)
+        ->post(route('admin.news.store'), [
+            'title' => 'Berita kosong',
+            'category' => 'umum',
+            'content' => 'Isi palsu',
+            'content_html' => '<p><br></p><script>alert(1)</script>',
+        ])
+        ->assertInvalid(['content']);
+
+    $this->assertDatabaseCount('news', 0);
 });
 
 it('deletes news and its thumbnail', function () {

@@ -18,11 +18,13 @@ use Illuminate\Support\Carbon;
  * @property Carbon $start_date
  * @property Carbon|null $end_date
  * @property string $color
+ * @property bool $whatsapp_reminder_enabled
+ * @property bool $is_cancelled
  * @property int|null $created_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['title', 'description', 'category', 'start_date', 'end_date', 'color', 'created_by'])]
+#[Fillable(['title', 'description', 'category', 'start_date', 'end_date', 'color', 'created_by', 'whatsapp_reminder_enabled', 'is_cancelled'])]
 class AcademicEvent extends Model
 {
     /** @use HasFactory<AcademicEventFactory> */
@@ -37,6 +39,8 @@ class AcademicEvent extends Model
             'category' => EventCategory::class,
             'start_date' => 'date',
             'end_date' => 'date',
+            'whatsapp_reminder_enabled' => 'boolean',
+            'is_cancelled' => 'boolean',
         ];
     }
 

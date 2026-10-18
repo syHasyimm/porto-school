@@ -7,6 +7,8 @@ export type AcademicEvent = {
     start_date: string;
     end_date: string | null;
     color: string;
+    whatsapp_reminder_enabled?: boolean;
+    is_cancelled?: boolean;
 };
 
 export type SelectOption = {

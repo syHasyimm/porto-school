@@ -14,13 +14,15 @@ use Illuminate\Support\Carbon;
  * @property string $title
  * @property string $slug
  * @property string $content
+ * @property string $category
+ * @property string|null $content_html
  * @property string|null $thumbnail_path
  * @property Carbon|null $published_at
  * @property int|null $created_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['title', 'slug', 'content', 'thumbnail_path', 'published_at', 'created_by'])]
+#[Fillable(['title', 'slug', 'content', 'category', 'content_html', 'thumbnail_path', 'published_at', 'created_by'])]
 class News extends Model
 {
     /** @use HasFactory<NewsFactory> */

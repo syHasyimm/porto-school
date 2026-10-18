@@ -9,10 +9,19 @@ import AdminLayout from '@/layouts/admin-layout';
 import { index, update } from '@/routes/admin/calendar';
 import type { AcademicEvent, SelectOption } from '@/types';
 
-type EditEventProps = { categories: SelectOption[]; event: AcademicEvent };
+type EditEventProps = {
+    categories: SelectOption[];
+    event: AcademicEvent;
+    calendarContext: { month?: string; search?: string; category?: string };
+};
 
-export default function EditEvent({ categories, event }: EditEventProps) {
-    const action = update.form(event.id);
+export default function EditEvent({
+    categories,
+    event,
+    calendarContext,
+}: EditEventProps) {
+    const action = update.form(event.id, { query: calendarContext });
+    const returnToCalendar = index({ query: calendarContext });
 
     return (
         <AdminLayout active="calendar" title="Edit Agenda">
@@ -22,7 +31,10 @@ export default function EditEvent({ categories, event }: EditEventProps) {
                     title="Edit agenda"
                     description={`Perbarui informasi ${event.title}.`}
                     breadcrumbs={[
-                        { label: 'Kalender akademik', href: index.url() },
+                        {
+                            label: 'Kalender akademik',
+                            href: returnToCalendar.url,
+                        },
                         { label: 'Edit agenda' },
                     ]}
                 />
@@ -42,7 +54,7 @@ export default function EditEvent({ categories, event }: EditEventProps) {
                             </Card>
                             <div className="flex justify-end gap-3">
                                 <Link
-                                    href={index()}
+                                    href={returnToCalendar}
                                     className={buttonVariants({
                                         variant: 'secondary',
                                     })}

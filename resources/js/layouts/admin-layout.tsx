@@ -10,6 +10,11 @@ import { index as galleryIndex } from '@/routes/admin/gallery';
 import { index as newsIndex } from '@/routes/admin/news';
 import { edit as settingsEdit } from '@/routes/admin/settings';
 import { index as teachersIndex } from '@/routes/admin/teachers';
+import { index as testimonialsIndex } from '@/routes/admin/testimonials';
+import { index as usersIndex } from '@/routes/admin/users';
+import { index as contactsIndex } from '@/routes/admin/teacher-contacts';
+import { edit as whatsappSettingsEdit } from '@/routes/admin/whatsapp/settings';
+import { index as whatsappHistoryIndex } from '@/routes/admin/whatsapp/deliveries';
 
 type AdminLayoutProps = PropsWithChildren<{
     active: DashboardNavKey;
@@ -21,33 +26,24 @@ export default function AdminLayout({
     children,
     title,
 }: AdminLayoutProps) {
-    const navigation = adminNavigation.map((item) => {
-        if (item.key === 'teachers') {
-            return { ...item, href: teachersIndex.url() };
-        }
-
-        if (item.key === 'calendar') {
-            return { ...item, href: calendarIndex.url() };
-        }
-
-        if (item.key === 'complaints') {
-            return { ...item, href: complaintsIndex.url() };
-        }
-
-        if (item.key === 'news') {
-            return { ...item, href: newsIndex.url() };
-        }
-
-        if (item.key === 'gallery') {
-            return { ...item, href: galleryIndex.url() };
-        }
-
-        if (item.key === 'settings') {
-            return { ...item, href: settingsEdit.url() };
-        }
-
-        return item;
-    });
+    const hrefs: Partial<Record<DashboardNavKey, string>> = {
+        dashboard: dashboard.url(),
+        calendar: calendarIndex.url(),
+        teachers: teachersIndex.url(),
+        users: usersIndex.url(),
+        complaints: complaintsIndex.url(),
+        'teacher-contacts': contactsIndex.url(),
+        'whatsapp-settings': whatsappSettingsEdit.url(),
+        'whatsapp-history': whatsappHistoryIndex.url(),
+        news: newsIndex.url(),
+        gallery: galleryIndex.url(),
+        testimonials: testimonialsIndex.url(),
+        settings: settingsEdit.url(),
+    };
+    const navigation = adminNavigation.map((item) => ({
+        ...item,
+        href: hrefs[item.key],
+    }));
 
     return (
         <DashboardLayout

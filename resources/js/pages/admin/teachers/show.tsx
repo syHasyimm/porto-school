@@ -11,6 +11,7 @@ import {
 import { useState } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { PageTransition } from '@/components/page-transition';
+import { TeacherEducationHistory } from '@/components/teacher-education-history';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import AdminLayout from '@/layouts/admin-layout';
@@ -109,6 +110,14 @@ export default function ShowTeacher({ teacher }: ShowTeacherProps) {
                             <p className="mt-3 text-sm leading-7 whitespace-pre-line text-slate-600">
                                 {teacher.bio ?? 'Bio belum diisi.'}
                             </p>
+                        </section>
+                        <section className="rounded-2xl border border-[#dce3ee] bg-white p-6">
+                            <h2 className="mb-6 font-heading text-lg font-bold">
+                                Riwayat pendidikan
+                            </h2>
+                            <TeacherEducationHistory
+                                entries={teacher.education_history}
+                            />
                         </section>
                         <Button
                             type="button"

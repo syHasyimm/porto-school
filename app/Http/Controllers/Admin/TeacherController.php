@@ -189,6 +189,22 @@ class TeacherController extends Controller
             $data['photo_path'] = $photoPath;
         }
 
+        if (array_key_exists('education_history', $validated)) {
+            $educationHistory = is_array($validated['education_history']) ? $validated['education_history'] : [];
+            $data['education_history'] = [];
+
+            foreach ($educationHistory as $education) {
+                $data['education_history'][] = [
+                    'level' => $education['level'],
+                    'institution' => $education['institution'],
+                    'field_of_study' => $education['field_of_study'] ?? null,
+                    'graduation_year' => isset($education['graduation_year'])
+                        ? (int) $education['graduation_year']
+                        : null,
+                ];
+            }
+        }
+
         return $data;
     }
 
@@ -224,6 +240,7 @@ class TeacherController extends Controller
             'birth_date' => $profile?->birth_date?->format('Y-m-d'),
             'subject' => $profile?->subject,
             'bio' => $profile?->bio,
+            'education_history' => $profile->education_history ?? [],
             'photo_url' => $profile?->photo_path !== null
                 ? Storage::disk('public')->url($profile->photo_path)
                 : null,

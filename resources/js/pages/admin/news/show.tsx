@@ -2,6 +2,7 @@ import { Form, Head, Link } from '@inertiajs/react';
 import { ArrowLeft, ImageOff, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { PageHeader } from '@/components/page-header';
+import { NewsBody } from '@/components/news-body';
 import { PageTransition } from '@/components/page-transition';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -55,14 +56,21 @@ export default function ShowNews({ article }: ShowNewsProps) {
                             </div>
                         )}
                         <article className="p-6 sm:p-8">
-                            <p className="text-sm leading-8 whitespace-pre-line text-slate-700">
-                                {article.content}
-                            </p>
+                            <NewsBody
+                                article={article}
+                                className="text-sm leading-8"
+                            />
                         </article>
                     </Card>
                     <aside className="space-y-5">
                         <Card className="p-5">
                             <p className="text-xs font-bold text-slate-500">
+                                Kategori
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-slate-700">
+                                {article.category_label ?? 'Umum'}
+                            </p>
+                            <p className="mt-5 text-xs font-bold text-slate-500">
                                 Status
                             </p>
                             <Badge

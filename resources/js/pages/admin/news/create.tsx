@@ -1,6 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { ArrowLeft, Save } from 'lucide-react';
-import { NewsFields } from '@/components/news-fields';
+import { NewsFields, type NewsCategoryOption } from '@/components/news-fields';
 import { PageHeader } from '@/components/page-header';
 import { PageTransition } from '@/components/page-transition';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -8,7 +8,9 @@ import { Card } from '@/components/ui/card';
 import AdminLayout from '@/layouts/admin-layout';
 import { index, store } from '@/routes/admin/news';
 
-export default function CreateNews() {
+type CreateNewsProps = { categories: NewsCategoryOption[] };
+
+export default function CreateNews({ categories }: CreateNewsProps) {
     return (
         <AdminLayout active="news" title="Tambah Berita">
             <Head title="Tambah Berita" />
@@ -29,7 +31,10 @@ export default function CreateNews() {
                     {({ errors, processing, progress }) => (
                         <div className="space-y-6">
                             <Card className="p-5 sm:p-7">
-                                <NewsFields errors={errors} />
+                                <NewsFields
+                                    categories={categories}
+                                    errors={errors}
+                                />
                                 {progress && (
                                     <p className="mt-5 text-sm font-semibold text-brand-700">
                                         Mengunggah {progress.percentage}%

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\NewsCategory;
 use App\Models\News;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -25,8 +26,30 @@ class PublicNewsController extends Controller
     {
         abort_if($news->published_at === null, 404);
 
+        $relatedNewsQuery = News::query()
+            ->select(['id', 'title', 'slug', 'content', 'category', 'thumbnail_path', 'published_at'])
+            ->whereNotNull('published_at')
+            ->whereKeyNot($news->getKey())
+            ->orderByDesc('published_at')
+            ->orderByDesc('id');
+
+        $relatedNews = (clone $relatedNewsQuery)
+            ->where('category', $news->category)
+            ->limit(3)
+            ->get();
+
+        if ($relatedNews->count() < 3) {
+            $otherNews = (clone $relatedNewsQuery)
+                ->where('category', '!=', $news->category)
+                ->limit(3 - $relatedNews->count())
+                ->get();
+
+            $relatedNews = $relatedNews->concat($otherNews);
+        }
+
         return Inertia::render('news/show', [
-            'article' => [...$this->newsData($news), 'content' => $news->content],
+            'article' => [...$this->newsData($news), 'content' => $news->content, 'content_html' => $news->content_html],
+            'relatedNews' => $relatedNews->map(fn (News $relatedArticle): array => $this->newsData($relatedArticle))->all(),
         ]);
     }
 
@@ -36,6 +59,8 @@ class PublicNewsController extends Controller
         return [
             'id' => $news->id,
             'title' => $news->title,
+            'category' => $news->category,
+            'category_label' => NewsCategory::from($news->category)->label(),
             'slug' => $news->slug,
             'excerpt' => Str::limit($news->content, 180),
             'thumbnail_url' => is_string($news->thumbnail_path)

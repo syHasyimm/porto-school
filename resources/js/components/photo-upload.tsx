@@ -1,12 +1,21 @@
 import { ImagePlus, UserRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 type PhotoUploadProps = {
     currentUrl?: string | null;
+    previewAlt?: string;
+    rounded?: boolean;
+    error?: string;
 };
 
-export function PhotoUpload({ currentUrl }: PhotoUploadProps) {
+export function PhotoUpload({
+    currentUrl,
+    previewAlt = 'Pratinjau foto guru',
+    rounded = false,
+    error,
+}: PhotoUploadProps) {
     const [previewUrl, setPreviewUrl] = useState<string | null>(
         currentUrl ?? null,
     );
@@ -22,11 +31,16 @@ export function PhotoUpload({ currentUrl }: PhotoUploadProps) {
 
     return (
         <div className="grid gap-4 sm:grid-cols-[8rem_1fr] sm:items-center">
-            <div className="grid aspect-square w-28 place-items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+            <div
+                className={cn(
+                    'grid aspect-square w-28 place-items-center overflow-hidden border border-slate-200 bg-slate-100',
+                    rounded ? 'rounded-full' : 'rounded-xl',
+                )}
+            >
                 {previewUrl ? (
                     <img
                         src={previewUrl}
-                        alt="Pratinjau foto guru"
+                        alt={previewAlt}
                         className="size-full object-cover"
                     />
                 ) : (
@@ -50,6 +64,8 @@ export function PhotoUpload({ currentUrl }: PhotoUploadProps) {
                 <Input
                     id="photo"
                     name="photo"
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? 'photo-error' : 'photo-hint'}
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
                     className="h-auto py-2 file:mr-3 file:rounded-md file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-brand-700"
@@ -66,9 +82,20 @@ export function PhotoUpload({ currentUrl }: PhotoUploadProps) {
                         setPreviewUrl(url);
                     }}
                 />
-                <p className="mt-2 text-xs leading-5 text-slate-500">
+                <p
+                    id="photo-hint"
+                    className="mt-2 text-xs leading-5 text-slate-500"
+                >
                     JPG, PNG, atau WebP. Maksimal 2 MB.
                 </p>
+                {error && (
+                    <p
+                        id="photo-error"
+                        className="mt-2 text-sm font-medium text-red-600"
+                    >
+                        {error}
+                    </p>
+                )}
             </div>
         </div>
     );

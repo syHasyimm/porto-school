@@ -57,6 +57,15 @@ class HandleInertiaRequests extends Middleware
                 'school_facilities' => $this->setting($settings, 'school_facilities'),
                 'school_extracurriculars' => $this->setting($settings, 'school_extracurriculars'),
                 'headmaster_name' => $this->setting($settings, 'headmaster_name'),
+                'headmaster_message' => $this->setting($settings, 'headmaster_message'),
+                'registration_url' => $this->setting($settings, 'registration_url'),
+                'alumni_count' => $this->setting($settings, 'alumni_count'),
+                'active_students_count' => $this->setting($settings, 'active_students_count'),
+                'teacher_staff_count' => $this->setting($settings, 'teacher_staff_count'),
+                'accreditation' => $this->setting($settings, 'accreditation'),
+                'hero_image_url' => $this->mediaUrl($settings, 'hero_image_path'),
+                'profile_image_url' => $this->mediaUrl($settings, 'profile_image_path'),
+                'headmaster_photo_url' => $this->mediaUrl($settings, 'headmaster_photo_path'),
                 'npsn' => $this->setting($settings, 'npsn'),
                 'facebook_url' => $this->setting($settings, 'facebook_url'),
                 'instagram_url' => $this->setting($settings, 'instagram_url'),
@@ -85,6 +94,16 @@ class HandleInertiaRequests extends Middleware
                 },
             ],
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $settings
+     */
+    private function mediaUrl(array $settings, string $key): ?string
+    {
+        $path = $this->setting($settings, $key);
+
+        return is_string($path) && $path !== '' ? Storage::disk('public')->url($path) : null;
     }
 
     /**

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { FormField } from '@/components/form-field';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -8,13 +9,21 @@ type AcademicEventFieldsProps = {
     categories: SelectOption[];
     errors: Partial<Record<string, string>>;
     event?: AcademicEvent;
+    defaultStartDate?: string;
+    defaultCategory?: string;
 };
 
 export function AcademicEventFields({
     categories,
     errors,
     event,
+    defaultStartDate,
+    defaultCategory,
 }: AcademicEventFieldsProps) {
+    const [reminderEnabled, setReminderEnabled] = useState(
+        event?.whatsapp_reminder_enabled ?? false,
+    );
+    const [cancelled, setCancelled] = useState(event?.is_cancelled ?? false);
     return (
         <div className="space-y-5">
             <FormField
@@ -41,7 +50,9 @@ export function AcademicEventFields({
                     <Select
                         id="category"
                         name="category"
-                        defaultValue={event?.category ?? 'kegiatan'}
+                        defaultValue={
+                            event?.category ?? defaultCategory ?? 'kegiatan'
+                        }
                         required
                     >
                         {categories.map((category) => (
@@ -76,7 +87,9 @@ export function AcademicEventFields({
                         id="start_date"
                         name="start_date"
                         type="date"
-                        defaultValue={event?.start_date ?? ''}
+                        defaultValue={
+                            event?.start_date ?? defaultStartDate ?? ''
+                        }
                         required
                     />
                 </FormField>
@@ -106,6 +119,61 @@ export function AcademicEventFields({
                     rows={5}
                 />
             </FormField>
+            <div className="space-y-4 border-t border-slate-200 pt-5">
+                <input
+                    type="hidden"
+                    name="whatsapp_reminder_enabled"
+                    value={reminderEnabled ? '1' : '0'}
+                />
+                <label className="flex items-start gap-3 text-sm text-slate-700">
+                    <input
+                        type="checkbox"
+                        checked={reminderEnabled}
+                        onChange={(e) => setReminderEnabled(e.target.checked)}
+                        className="mt-1 size-4 accent-brand-600"
+                    />
+                    <span>
+                        <span className="block font-semibold">
+                            Aktifkan pengingat WhatsApp
+                        </span>
+                        <span className="mt-1 block text-xs leading-5 text-slate-500">
+                            Satu pesan per guru setiap hari selama agenda
+                            berlangsung, mengikuti pengaturan WhatsApp.
+                        </span>
+                    </span>
+                </label>
+                {errors.whatsapp_reminder_enabled && (
+                    <p className="text-sm text-red-600">
+                        {errors.whatsapp_reminder_enabled}
+                    </p>
+                )}
+                <input
+                    type="hidden"
+                    name="is_cancelled"
+                    value={cancelled ? '1' : '0'}
+                />
+                <label className="flex items-start gap-3 text-sm text-slate-700">
+                    <input
+                        type="checkbox"
+                        checked={cancelled}
+                        onChange={(e) => setCancelled(e.target.checked)}
+                        className="mt-1 size-4 accent-brand-600"
+                    />
+                    <span>
+                        <span className="block font-semibold">
+                            Agenda dibatalkan
+                        </span>
+                        <span className="mt-1 block text-xs leading-5 text-slate-500">
+                            Pengingat yang belum dikirim akan dilewati.
+                        </span>
+                    </span>
+                </label>
+                {errors.is_cancelled && (
+                    <p className="text-sm text-red-600">
+                        {errors.is_cancelled}
+                    </p>
+                )}
+            </div>
         </div>
     );
 }

@@ -1,14 +1,18 @@
 import { FormField } from '@/components/form-field';
+import { NewsEditor } from '@/components/news-editor';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Select } from '@/components/ui/select';
 import type { NewsArticle } from '@/types';
+
+export type NewsCategoryOption = { value: string; label: string };
 
 type NewsFieldsProps = {
     article?: NewsArticle;
+    categories: NewsCategoryOption[];
     errors: Partial<Record<string, string>>;
 };
 
-export function NewsFields({ article, errors }: NewsFieldsProps) {
+export function NewsFields({ article, categories, errors }: NewsFieldsProps) {
     return (
         <div className="space-y-5">
             <FormField
@@ -24,6 +28,28 @@ export function NewsFields({ article, errors }: NewsFieldsProps) {
                     required
                     autoFocus
                 />
+            </FormField>
+            <FormField
+                htmlFor="category"
+                label="Kategori"
+                error={errors.category}
+                required
+            >
+                <Select
+                    id="category"
+                    name="category"
+                    defaultValue={article?.category ?? ''}
+                    required
+                >
+                    <option value="" disabled>
+                        Pilih kategori berita
+                    </option>
+                    {categories.map((category) => (
+                        <option key={category.value} value={category.value}>
+                            {category.label}
+                        </option>
+                    ))}
+                </Select>
             </FormField>
             <div className="grid gap-5 sm:grid-cols-2">
                 <FormField
@@ -67,18 +93,15 @@ export function NewsFields({ article, errors }: NewsFieldsProps) {
                 </div>
             )}
             <FormField
-                htmlFor="content"
+                htmlFor="content-editor"
                 label="Isi berita"
-                error={errors.content}
-                hint="Pisahkan paragraf dengan baris kosong agar mudah dibaca."
+                error={errors.content ?? errors.content_html}
+                hint="Gunakan toolbar untuk judul bagian, daftar, tautan, dan penekanan teks."
                 required
             >
-                <Textarea
-                    id="content"
-                    name="content"
-                    defaultValue={article?.content ?? ''}
-                    rows={16}
-                    required
+                <NewsEditor
+                    content={article?.content}
+                    contentHtml={article?.content_html}
                 />
             </FormField>
         </div>

@@ -34,6 +34,8 @@ class UpdateAcademicEventRequest extends FormRequest
             'start_date' => ['required', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             'color' => ['required', 'hex_color'],
+            'whatsapp_reminder_enabled' => ['sometimes', 'boolean'],
+            'is_cancelled' => ['sometimes', 'boolean'],
         ];
     }
 }

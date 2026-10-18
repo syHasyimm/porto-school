@@ -26,6 +26,7 @@ class PublicTeacherController extends Controller
                     'name' => $teacher->name,
                     'subject' => $profile?->subject,
                     'bio' => $profile?->bio,
+                    'education_history' => $profile->education_history ?? [],
                     'photo_url' => $profile?->photo_path !== null
                         ? Storage::disk('public')->url($profile->photo_path)
                         : null,

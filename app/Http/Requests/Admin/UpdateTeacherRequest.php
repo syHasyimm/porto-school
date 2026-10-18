@@ -53,6 +53,12 @@ class UpdateTeacherRequest extends FormRequest
             'birth_date' => ['nullable', 'date', 'before:today'],
             'subject' => ['required', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:2000'],
+            'education_history' => ['nullable', 'array', 'list', 'max:12'],
+            'education_history.*' => ['required', 'array:level,institution,field_of_study,graduation_year'],
+            'education_history.*.level' => ['required', 'string', 'max:100'],
+            'education_history.*.institution' => ['required', 'string', 'max:255'],
+            'education_history.*.field_of_study' => ['nullable', 'string', 'max:255'],
+            'education_history.*.graduation_year' => ['nullable', 'integer', 'min:1900', 'max:'.now()->year],
         ];
     }
 }

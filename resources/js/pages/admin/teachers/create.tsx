@@ -4,6 +4,7 @@ import { FormField } from '@/components/form-field';
 import { PageHeader } from '@/components/page-header';
 import { PageTransition } from '@/components/page-transition';
 import { TeacherProfileFields } from '@/components/teacher-profile-fields';
+import { TeacherEducationEditor } from '@/components/teacher-education-editor';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -24,7 +25,7 @@ export default function CreateTeacher() {
                     ]}
                 />
                 <Form action={store()} resetOnSuccess className="max-w-4xl">
-                    {({ errors, processing, progress }) => (
+                    {({ errors, processing, progress, clearErrors }) => (
                         <div className="space-y-6">
                             <Card className="p-5 sm:p-7">
                                 <h2 className="font-heading text-lg font-bold">
@@ -101,6 +102,11 @@ export default function CreateTeacher() {
                                 </p>
                                 <TeacherProfileFields errors={errors} />
                             </Card>
+                            <TeacherEducationEditor
+                                clearErrors={clearErrors}
+                                errors={errors}
+                                processing={processing}
+                            />
                             {progress && (
                                 <div
                                     className="h-2 overflow-hidden rounded-full bg-slate-200"

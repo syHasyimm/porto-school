@@ -1,5 +1,6 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { ArrowLeft, School } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 import { FormField } from '@/components/form-field';
 import { PageTransition } from '@/components/page-transition';
 import { Button } from '@/components/ui/button';
@@ -8,10 +9,20 @@ import { home } from '@/routes';
 import { store } from '@/routes/login';
 
 export default function Login() {
+    const reducedMotion = useReducedMotion();
+
     return (
         <main className="grid min-h-[100dvh] bg-slate-50 lg:grid-cols-[0.9fr_1.1fr]">
             <Head title="Login" />
-            <section className="hidden bg-slate-950 p-12 text-white lg:flex lg:flex-col lg:justify-between">
+            <motion.section
+                initial={reducedMotion ? false : { opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                    duration: reducedMotion ? 0 : 0.6,
+                    ease: [0.16, 1, 0.3, 1],
+                }}
+                className="hidden bg-slate-950 p-12 text-white lg:flex lg:flex-col lg:justify-between"
+            >
                 <Link
                     href={home()}
                     className="flex items-center gap-3 font-heading font-bold"
@@ -36,7 +47,7 @@ export default function Login() {
                 <p className="text-xs text-slate-500">
                     Sistem informasi sekolah
                 </p>
-            </section>
+            </motion.section>
 
             <section className="grid place-items-center px-4 py-10 sm:px-8">
                 <PageTransition>
